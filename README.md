@@ -1,0 +1,1 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/7b53eb21719a8a72afcd/maintainability)](https://codeclimate.com/github/SamKuper/backend-project-lvl2/maintainability)
