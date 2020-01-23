@@ -21,7 +21,9 @@
     "eslint-plugin-lodash-fp": "^2.2.0-a1"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test-coverage": "jest --coverage",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
