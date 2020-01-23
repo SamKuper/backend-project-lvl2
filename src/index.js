@@ -1,7 +1,8 @@
 const fs = require('fs');
 
-module.exports = (file1, file2) => {
-  const getObject = (file) => JSON.parse(fs.readFileSync(file));
+const getObject = (file) => JSON.parse(fs.readFileSync(file));
+
+const compare = (file1, file2) => {
   const firstConfig = getObject(file1);
   const secondConfig = getObject(file2);
   const newFields = Object.keys(secondConfig)
@@ -19,3 +20,5 @@ module.exports = (file1, file2) => {
     }, newFields);
   return ['{', ...differences, '}'].join('\n');
 };
+
+module.exports = compare;
