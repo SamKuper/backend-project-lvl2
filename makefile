@@ -1,4 +1,4 @@
-install: 
+install:
 	npm install
 run:
 	npx run babel-node -- src/bin/gendiff.js
@@ -9,3 +9,7 @@ lint:
 build:
 	rm -rf dist
 	npm run build
+test:
+	npm test
+test-coverage:
+	npm run test-coverage
