@@ -1,28 +1,34 @@
 const fs = require('fs');
+const path = require('path');
+const parser = require('./parsers.js');
 
-const getObject = (file) => JSON.parse(fs.readFileSync(file));
+const getObject = (file, format) => parser[format](file);
+const getFormat = (str) => path.extname(str);
 
-const getDiff = (firstConfig, secondConfig, acc) => {
+const addNewFields = (firstConfig, secondConfig, acc) => Object.keys(secondConfig)
+  .reduce((iacc, key) => (firstConfig[key]
+    ? [...iacc] : [...iacc, `  + ${key}: ${secondConfig[key]}`]), acc);
+
+const getDiff = (firstConfig, secondConfig) => {
   const diff = Object.keys(firstConfig).reverse()
-    .reduce((iacc, key) => {
+    .reduce((acc, key) => {
       if (secondConfig[key]) {
         return secondConfig[key] === firstConfig[key]
-          ? [`    ${key}: ${firstConfig[key]}`, ...iacc]
-          : [`  + ${key}: ${secondConfig[key]}`, `  - ${key}: ${firstConfig[key]}`, ...iacc];
+          ? [`    ${key}: ${firstConfig[key]}`, ...acc]
+          : [`  + ${key}: ${secondConfig[key]}`, `  - ${key}: ${firstConfig[key]}`, ...acc];
       }
-      return [`  - ${key}: ${firstConfig[key]}`, ...iacc];
-    }, acc);
-  return diff;
+      return [`  - ${key}: ${firstConfig[key]}`, ...acc];
+    }, []);
+  return addNewFields(firstConfig, secondConfig, diff);
 };
 
-const compare = (file1, file2) => {
-  const firstConfig = getObject(file1);
-  const secondConfig = getObject(file2);
-  const newFields = Object.keys(secondConfig)
-    .reduce((acc, key) => (firstConfig[key]
-      ? [...acc] : [...acc, `  + ${key}: ${secondConfig[key]}`]), []);
-  const diff = getDiff(firstConfig, secondConfig, newFields);
+module.exports = (file1, file2) => {
+  const firstConfigTxt = fs.readFileSync(file1, 'utf-8');
+  const secondConfigTxt = fs.readFileSync(file2, 'utf-8');
+  const format1 = getFormat(file1);
+  const format2 = getFormat(file2);
+  const firstConfig = getObject(firstConfigTxt, format1);
+  const secondConfig = getObject(secondConfigTxt, format2);
+  const diff = getDiff(firstConfig, secondConfig);
   return ['{', ...diff, '}'].join('\n');
 };
-
-module.exports = compare;
