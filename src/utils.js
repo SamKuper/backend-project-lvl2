@@ -1,4 +1,4 @@
-const flatten = (a) => a.reduce((acc, n) => (typeof n === 'object'
-  ? [...acc, ...flatten(n)] : [...acc, n]), []);
+const flayt = (a) => a.reduce((acc, n) => (typeof n === 'object'
+  ? [...acc, ...flayt(n)] : [...acc, n]), []);
 
-module.exports = flatten;
+module.exports = flayt;

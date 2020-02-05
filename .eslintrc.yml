@@ -7,7 +7,5 @@ parser: babel-eslint
 extends:
   - 'airbnb-base'
   - 'plugin:jest/recommended'
-  - 'plugin:lodash-fp/recommended'
 rules:
   no-console: 0
-  function-paren-newline: 0
