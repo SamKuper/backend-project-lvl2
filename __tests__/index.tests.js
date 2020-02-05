@@ -13,16 +13,30 @@ const yamlAfter = getPath('after.yml');
 const iniBefore = getPath('before.ini');
 const iniAfter = getPath('after.ini');
 
-const result = fs.readFileSync(getPath('res.txt'), 'utf-8');
+const resultObj = fs.readFileSync(getPath('resObject.txt'), 'utf-8');
+const resultPlain = fs.readFileSync(getPath('resPlain.txt'), 'utf-8');
 
-describe('compare', () => {
-  test('flatJSON', () => {
-    expect(compare(jsonBefore, jsonAfter)).toBe(result);
+describe('gendiff', () => {
+  describe('objectFormat', () => {
+    test('JSON', () => {
+      expect(compare(jsonBefore, jsonAfter)).toBe(resultObj);
+    });
+    test('yaml', () => {
+      expect(compare(yamlBefore, yamlAfter)).toBe(resultObj);
+    });
+    test('ini', () => {
+      expect(compare(iniBefore, iniAfter)).toBe(resultObj);
+    });
   });
-  test('flatYaml', () => {
-    expect(compare(yamlBefore, yamlAfter)).toBe(result);
-  });
-  test('flatIni', () => {
-    expect(compare(iniBefore, iniAfter)).toBe(result);
+  describe('plainFormat', () => {
+    test('JSON', () => {
+      expect(compare(jsonBefore, jsonAfter, 'plain')).toBe(resultPlain);
+    });
+    test('yaml', () => {
+      expect(compare(yamlBefore, yamlAfter, 'plain')).toBe(resultPlain);
+    });
+    test('ini', () => {
+      expect(compare(iniBefore, iniAfter, 'plain')).toBe(resultPlain);
+    });
   });
 });
