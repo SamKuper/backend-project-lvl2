@@ -15,34 +15,37 @@ const toString = (obj, depth) => {
 
 const check = (arg) => (typeof arg === 'object');
 
+const getStr = (depth, name, value, flag) => {
+  const stringValue = check(value) ? toString(value, depth + 1) : value;
+  const str = `${getSpaces(depth)}${flag} ${name}: ${stringValue}`;
+  return str;
+}
+
+const types = {
+  added: (depth, node) => {
+    const { name, newValue } = node;
+    return getStr(depth, name, newValue, '+');
+  },
+  removed: (depth, node) => {
+    const { name, oldValue } = node;
+    return getStr(depth, name, oldValue, '-');
+  },
+  changed: (depth, node) => {
+    const { name, oldValue, newValue } = node;
+    return [types.added(depth, node), types.removed(depth, node)];
+  },
+  stable: (depth, node) => {
+    const { name, value } = node;
+    return getStr(depth, name, value, ' ');
+  },
+  nested: (depth, node, fn) => {
+    const { name, children } = node;
+    return [`${getSpaces(depth)}  ${name}: {`, fn(children, depth + 1),
+      `${getSpaces(depth + 1)}}`];
+  },
+};
+
 const render = (ast) => {
-  const types = {
-    added: (depth, node) => {
-      const { name, newValue } = node;
-      return check(newValue)
-        ? `${getSpaces(depth)}+ ${name}: ${toString(newValue, depth + 1)}` :
-        `${getSpaces(depth)}+ ${name}: ${newValue}`;
-    },
-    removed: (depth, node) => {
-      const { name, oldValue } = node;
-      return check(oldValue)
-        ? `${getSpaces(depth)}- ${name}: ${toString(oldValue, depth + 1)}` :
-        `${getSpaces(depth)}- ${name}: ${oldValue}`;
-    },
-    changed: (depth, node) => {
-      const { name, oldValue, newValue } = node;
-      return [types.added(depth, node), types.removed(depth, node)];
-    },
-    stable: (depth, node) => {
-      const { name, value } = node;
-      return `${getSpaces(depth)}  ${name}: ${value}`;
-    },
-    nested: (depth, node, fn) => {
-      const { name, children } = node;
-      return [`${getSpaces(depth)}  ${name}: {`, fn(children, depth + 1),
-        `${getSpaces(depth + 1)}}`];
-    },
-  }
   const fn = (ast, depth) => ast.map((node) => types[node.type](depth, node, fn));
   const begin = 0;
   const rendered = flatten(fn(ast, begin)).join('\n');

@@ -10,7 +10,7 @@ const types = [
   },
   {
     type: 'removed',
-    check: (obj1, obj2, key) => has(obj1, key) && !has(obj2, key),
+    check: (obj1, obj2, key) => !has(obj2, key) && has(obj1, key),
     build: (obj1, obj2, key) => ({ oldValue: obj1[key] }),
   },
   {
