@@ -1,6 +1,6 @@
-const fs = require('fs');
-const path = require('path');
-const compare = require('../src');
+import fs from 'fs';
+import path from 'path';
+import compare from '../src';
 
 const getPath = (filename) => path.join(__dirname, '__fixtures__', filename);
 

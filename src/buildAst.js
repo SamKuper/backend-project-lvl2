@@ -41,4 +41,4 @@ const parse = (obj1, obj2) => {
   });
 };
 
-module.exports = parse;
+export default parse;

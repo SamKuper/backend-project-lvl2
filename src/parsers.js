@@ -1,7 +1,7 @@
-const yaml = require('js-yaml');
-const ini = require('ini');
+import yaml from 'js-yaml';
+import ini from 'ini';
 
-module.exports = {
+export default {
   '.json': (file) => JSON.parse(file),
   '.yml': (file) => yaml.safeLoad(file),
   '.ini': (file) => ini.decode(file),

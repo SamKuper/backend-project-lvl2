@@ -1,6 +1,7 @@
-const flatten = require('../utils.js');
+import flatten from '../utils';
 
-const getSpaces = (i) => ('  '.repeat(i));
+const getSpaces = (i, flagSize = 2, stepSize = 4) => (
+  ' '.repeat(stepSize * i - flagSize));
 
 const check = (arg) => (typeof arg === 'object');
 
@@ -10,7 +11,7 @@ const toString = (obj, depth) => {
     ? ['{', `${getSpaces(depth)}  ${key}: `,
       `${toString(obj[key], depth + 1)}`, `${getSpaces(depth)}}`].join('\n')
     : ['{', `${getSpaces(depth)}  ${key}: ${obj[key]}`,
-      `${getSpaces(depth)}}`].join('\n')));
+      `${getSpaces(depth - 1, 0)}}`].join('\n')));
 };
 
 const getStr = (depth, name, value, flag) => {
@@ -36,15 +37,15 @@ const types = {
   nested: (depth, node, fn) => {
     const { name, children } = node;
     return [`${getSpaces(depth)}  ${name}: {`, fn(children, depth + 1),
-      `${getSpaces(depth + 1)}}`];
+      `${getSpaces(depth, 0)}}`];
   },
 };
 
 const render = (ast) => {
   const fn = (arr, depth) => arr.map((node) => types[node.type](depth, node, fn));
-  const begin = 0;
+  const begin = 1;
   const rendered = flatten(fn(ast, begin)).join('\n');
   return `{\n${rendered}\n}\n`;
 };
 
-module.exports = render;
+export default render;

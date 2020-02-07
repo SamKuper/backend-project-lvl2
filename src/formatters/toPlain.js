@@ -15,4 +15,4 @@ const getPlain = (ast) => {
   return iter(ast, '').join('\n');
 };
 
-module.exports = getPlain;
+export default getPlain;
