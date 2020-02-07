@@ -15,6 +15,7 @@ const iniAfter = getPath('after.ini');
 
 const resultObj = fs.readFileSync(getPath('resObject.txt'), 'utf-8');
 const resultPlain = fs.readFileSync(getPath('resPlain.txt'), 'utf-8');
+const resultJSON = fs.readFileSync(getPath('resJSON.txt'), 'utf-8');
 
 describe('gendiff', () => {
   describe('objectFormat', () => {
@@ -37,6 +38,17 @@ describe('gendiff', () => {
     });
     test('ini', () => {
       expect(compare(iniBefore, iniAfter, 'plain')).toBe(resultPlain);
+    });
+  });
+  describe('jsonFormat', () => {
+    test('JSON', () => {
+      expect(compare(jsonBefore, jsonAfter, 'json')).toBe(resultJSON);
+    });
+    test('yaml', () => {
+      expect(compare(yamlBefore, yamlAfter, 'json')).toBe(resultJSON);
+    });
+    test('ini', () => {
+      expect(compare(iniBefore, iniAfter, 'json')).toBe(resultJSON);
     });
   });
 });
