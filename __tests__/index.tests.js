@@ -17,38 +17,32 @@ const resultObj = fs.readFileSync(getPath('resObject.txt'), 'utf-8');
 const resultPlain = fs.readFileSync(getPath('resPlain.txt'), 'utf-8');
 const resultJSON = fs.readFileSync(getPath('resJSON.txt'), 'utf-8');
 
-describe('gendiff', () => {
-  describe('objectFormat', () => {
-    test('JSON', () => {
-      expect(compare(jsonBefore, jsonAfter)).toBe(resultObj);
-    });
-    test('yaml', () => {
-      expect(compare(yamlBefore, yamlAfter)).toBe(resultObj);
-    });
-    test('ini', () => {
-      expect(compare(iniBefore, iniAfter)).toBe(resultObj);
-    });
+describe.each([
+  [jsonBefore, jsonAfter, resultObj],
+  [yamlBefore, yamlAfter, resultObj],
+  [iniBefore, iniAfter, resultObj],
+])('objectFormat', (a, b, expected) => {
+  test('obj', () => {
+    expect(compare(a, b)).toBe(expected);
   });
-  describe('plainFormat', () => {
-    test('JSON', () => {
-      expect(compare(jsonBefore, jsonAfter, 'plain')).toBe(resultPlain);
-    });
-    test('yaml', () => {
-      expect(compare(yamlBefore, yamlAfter, 'plain')).toBe(resultPlain);
-    });
-    test('ini', () => {
-      expect(compare(iniBefore, iniAfter, 'plain')).toBe(resultPlain);
-    });
+});
+
+describe.each([
+  [jsonBefore, jsonAfter, resultPlain],
+  [yamlBefore, yamlAfter, resultPlain],
+  [iniBefore, iniAfter, resultPlain],
+])('plainFormat', (a, b, expected) => {
+  test('plain', () => {
+    expect(compare(a, b, 'plain')).toBe(expected);
   });
-  describe('jsonFormat', () => {
-    test('JSON', () => {
-      expect(compare(jsonBefore, jsonAfter, 'json')).toBe(resultJSON);
-    });
-    test('yaml', () => {
-      expect(compare(yamlBefore, yamlAfter, 'json')).toBe(resultJSON);
-    });
-    test('ini', () => {
-      expect(compare(iniBefore, iniAfter, 'json')).toBe(resultJSON);
-    });
+});
+
+describe.each([
+  [jsonBefore, jsonAfter, resultJSON],
+  [yamlBefore, yamlAfter, resultJSON],
+  [iniBefore, iniAfter, resultJSON],
+])('jsonFormat', (a, b, expected) => {
+  test('json', () => {
+    expect(compare(a, b, 'json')).toBe(expected);
   });
 });
