@@ -33,12 +33,12 @@ const types = [
 
 const getBuildFunction = (...args) => types.find(({ check }) => check(...args));
 
-const parse = (obj1, obj2) => {
+const getAst = (obj1, obj2) => {
   const keys = uniq(...Object.keys(obj1), ...Object.keys(obj2));
   return keys.map((key) => {
     const { type, build } = getBuildFunction(obj1, obj2, key);
-    return { name: key, type, ...build(obj1, obj2, key, parse) };
+    return { name: key, type, ...build(obj1, obj2, key, getAst) };
   });
 };
 
-export default parse;
+export default getAst;

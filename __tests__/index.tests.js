@@ -4,33 +4,32 @@ import compare from '../src';
 
 const getPath = (filename) => path.join(__dirname, '__fixtures__', filename);
 
-const jsonBefore = getPath('before.json');
-const jsonAfter = getPath('after.json');
+const getResult = (fileName) => fs.readFileSync(getPath(fileName), 'utf-8');
 
-const yamlBefore = getPath('before.yml');
-const yamlAfter = getPath('after.yml');
-
-const iniBefore = getPath('before.ini');
-const iniAfter = getPath('after.ini');
-
-const resultObj = fs.readFileSync(getPath('resObject.txt'), 'utf-8');
-const resultPlain = fs.readFileSync(getPath('resPlain.txt'), 'utf-8');
-const resultJSON = fs.readFileSync(getPath('resJSON.txt'), 'utf-8');
+let resultObj;
+let resultPlain;
+let resultJSON;
 
 const table = [
-  [jsonBefore, jsonAfter],
-  [yamlBefore, yamlAfter],
-  [iniBefore, iniAfter],
+  ['before.json', 'after.json'],
+  ['before.yml', 'after.yml'],
+  ['before.ini', 'after.ini'],
 ];
+
+beforeEach(() => {
+  resultObj = getResult('resObject.txt');
+  resultPlain = getResult('resPlain.txt');
+  resultJSON = getResult('resJSON.txt');
+});
 
 describe.each(table)('gendiff', (a, b) => {
   test('object', () => {
-    expect(compare(a, b)).toBe(resultObj);
+    expect(compare(getPath(a), getPath(b))).toBe(resultObj);
   });
   test('plain', () => {
-    expect(compare(a, b, 'plain')).toBe(resultPlain);
+    expect(compare(getPath(a), getPath(b), 'plain')).toBe(resultPlain);
   });
   test('json', () => {
-    expect(compare(a, b, 'json')).toBe(resultJSON);
+    expect(compare(getPath(a), getPath(b), 'json')).toBe(resultJSON);
   });
 });
