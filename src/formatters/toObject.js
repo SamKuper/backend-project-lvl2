@@ -1,4 +1,4 @@
-import flatten from '../utils';
+import { flattenDeep } from 'lodash';
 
 const getSpaces = (i, flagSize = 2, stepSize = 4) => (
   ' '.repeat(stepSize * i - flagSize));
@@ -14,7 +14,7 @@ const toString = (obj, depth) => {
       `${getSpaces(depth - 1, 0)}}`].join('\n')));
 };
 
-const getStr = (depth, name, value, flag) => {
+const buildLine = (depth, name, value, flag) => {
   const stringValue = check(value) ? toString(value, depth + 1) : value;
   const str = `${getSpaces(depth)}${flag} ${name}: ${stringValue}`;
   return str;
@@ -23,16 +23,16 @@ const getStr = (depth, name, value, flag) => {
 const types = {
   added: (depth, node) => {
     const { name, newValue } = node;
-    return getStr(depth, name, newValue, '+');
+    return buildLine(depth, name, newValue, '+');
   },
   removed: (depth, node) => {
     const { name, oldValue } = node;
-    return getStr(depth, name, oldValue, '-');
+    return buildLine(depth, name, oldValue, '-');
   },
   changed: (depth, node) => [types.added(depth, node), types.removed(depth, node)],
   stable: (depth, node) => {
     const { name, value } = node;
-    return getStr(depth, name, value, ' ');
+    return buildLine(depth, name, value, ' ');
   },
   nested: (depth, node, fn) => {
     const { name, children } = node;
@@ -44,7 +44,7 @@ const types = {
 const render = (ast) => {
   const fn = (arr, depth) => arr.map((node) => types[node.type](depth, node, fn));
   const begin = 1;
-  const rendered = flatten(fn(ast, begin)).join('\n');
+  const rendered = flattenDeep(fn(ast, begin)).join('\n');
   return `{\n${rendered}\n}\n`;
 };
 

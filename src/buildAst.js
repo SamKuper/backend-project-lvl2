@@ -1,6 +1,4 @@
-const uniq = (...args) => args.reduce((acc, n) => (acc.includes(n) ? acc : [...acc, n]), []);
-
-const has = (a, key) => Object.keys(a).includes(key);
+import { union, has, keys } from 'lodash';
 
 const types = [
   {
@@ -34,8 +32,8 @@ const types = [
 const getBuildFunction = (...args) => types.find(({ check }) => check(...args));
 
 const getAst = (obj1, obj2) => {
-  const keys = uniq(...Object.keys(obj1), ...Object.keys(obj2));
-  return keys.map((key) => {
+  const allKeys = union(keys(obj1), keys(obj2));
+  return allKeys.map((key) => {
     const { type, build } = getBuildFunction(obj1, obj2, key);
     return { name: key, type, ...build(obj1, obj2, key, getAst) };
   });
