@@ -1,4 +1,6 @@
-const getValue = (arg) => (typeof arg === 'object' ? '[complex value]' : arg);
+import { isObject } from 'lodash';
+
+const getValue = (arg) => (isObject(arg) ? '[complex value]' : arg);
 
 const types = {
   added: (node, path) => `Property '${path}' was added with value: '${getValue(node.newValue)}'`,

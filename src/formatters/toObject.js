@@ -1,13 +1,11 @@
-import { flattenDeep } from 'lodash';
+import { flattenDeep, isObject } from 'lodash';
 
 const getSpaces = (i, flagSize = 2, stepSize = 4) => (
   ' '.repeat(stepSize * i - flagSize));
 
-const check = (arg) => (typeof arg === 'object');
-
 const toString = (obj, depth) => {
   const keys = Object.keys(obj);
-  return keys.map((key) => (check(obj[key])
+  return keys.map((key) => (isObject(obj[key])
     ? ['{', `${getSpaces(depth)}  ${key}: `,
       `${toString(obj[key], depth + 1)}`, `${getSpaces(depth)}}`].join('\n')
     : ['{', `${getSpaces(depth)}  ${key}: ${obj[key]}`,
@@ -15,7 +13,7 @@ const toString = (obj, depth) => {
 };
 
 const buildLine = (depth, name, value, flag) => {
-  const stringValue = check(value) ? toString(value, depth + 1) : value;
+  const stringValue = isObject(value) ? toString(value, depth + 1) : value;
   const str = `${getSpaces(depth)}${flag} ${name}: ${stringValue}`;
   return str;
 };
